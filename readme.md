@@ -189,7 +189,7 @@ php artisan generate:view index
 修改`footer.blade.php`：
 ```python
 <footer class="footer">
-  <p>© 2015 By <a href="http://www.shiyanlou.com" target="_blank">www.shiyanlou.com</a></p>
+  <p>© 2015 By <a href="http://www.sruibox.com" target="_blank">www.sruibox.com</a></p>
 </footer>
 ```
 修改`index.blade.php`：
@@ -290,7 +290,7 @@ Route::get('login', function()
 });
 ```
 这时候访问`localhost:8000/login`或者点击导航条的Login按钮会出现下图这样：
-
+![tool-editor](https://raw.githubusercontent.com/lipin/blog_laravel/master/public/i/Screen%20Shot%202015-01-23%20at%2010.59.58%20AM.png)
 
 
 ## 9.实现登录
@@ -365,11 +365,10 @@ Route::get('home', array('before' => 'auth', function()
 }));
 ```
 下面就可以尝试用户登录了，如果输入信息有误，会出现错误信息如：
-
-
+![tool-editor](https://raw.githubusercontent.com/lipin/blog_laravel/master/public/i/Screen%20Shot%202015-01-23%20at%2011.02.43%20AM.png)
 
 登录成功后会出现下图这样：
-
+![tool-editor](https://raw.githubusercontent.com/lipin/blog_laravel/master/public/i/Screen%20Shot%202015-01-23%20at%2011.07.49%20AM.png)
 
 
 这里我们使用了`Laravel`自带的身份验证`Auth`，你也可以使用更加强大的`Sentry`，`Web`表单验证用了`Validator`，`View`和`Redirect`详细可以查看视图和响应文档，还使用了路由过滤器，csrf过滤器可以使我们轻松地防御csrf攻击。
@@ -385,8 +384,7 @@ Route::get('logout', array('before' => 'auth', function()
 }));
 ```
 现在你就可以实现退出功能了，点击Exit：
-
-
+![tool-editor](https://raw.githubusercontent.com/lipin/blog_laravel/master/public/i/Screen%20Shot%202015-01-23%20at%2011.08.49%20AM.png)
 
 退出后会跳转到主页。
 
