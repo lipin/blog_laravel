@@ -79,6 +79,8 @@ Schema::create('users', function(Blueprint $table)
     $table->string('nickname');
     $table->boolean('is_admin')->default(0);
     $table->boolean('block')->default(0);
+    $table->rememberToken();
+    <!-- $table->rememberToken(); /Laravel 4.2 and up now has a method you can use with your schema builder to add this column. -->
     $table->timestamps();
 });
 ```
@@ -171,3 +173,220 @@ php artisan generate:view index
 </body>
 </html>
 ```
+`URL::asset('i/favicon.ico')`会生成`http://localhost:8000/i/favicon.ico`，`HTML::style('css/custom.css')`会生成`<link media="all" type="text/css" rel="stylesheet" href="http://localhost:8000/css/custom.css">`，其中的`i`和`css`文件夹是放在`public`目录下的，`public`目录是项目的资源文件夹。`@include('_layouts.nav')`会包含`app/views/_layouts/nav.blade.php`文件，`@yield('main')`是用于模版继承的。
+
+修改`nav.blade.php`：
+```python
+<button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only"
+        data-am-collapse="{target: '#collapse-head'}"><span class="am-sr-only">nav switch</span>
+        <span class="am-icon-bars"></span></button>
+<div class="am-collapse am-topbar-collapse" id="collapse-head">
+  <div class="am-topbar-right">
+    <a href="#" class="am-btn am-btn-primary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-user"></span> Login</a>
+  </div>
+</div>
+```
+修改`footer.blade.php`：
+```python
+<footer class="footer">
+  <p>© 2015 By <a href="http://www.shiyanlou.com" target="_blank">www.shiyanlou.com</a></p>
+</footer>
+```
+修改`index.blade.php`：
+```python
+@extends('_layouts.default')
+
+@section('main')
+<div class="am-g am-g-fixed blog-g-fixed">
+  <div class="am-u-sm-12">
+      <h1>Welcome to ShiYanLou！</h1>
+  </div>
+</div>
+@stop
+```
+`@extends('_layouts.default')`会继承`app/views/_layouts/default.blade.php`文件，`@yield('main')`对应`@section('main')`并填充为其中的内容。
+
+在`public`目录下新建两个文件夹`i`和`css`，在i文件夹里放置一个名为`favicon.ico`的图标，在`css`文件夹下新建一个名为`custom.css`的文件，修改如下：
+```python
+.footer p {
+  color: #7f8c8d;
+  margin: 0;
+  padding: 15px 0;
+  text-align: center;
+  background: #2d3e50;
+}
+
+.topbar-link-btn {
+    color: #fff !important;
+}
+```
+## 7.修改路由访问首页
+
+视图已经有了，这时候需要把路由跟视图进行关联，修改`app/routes.php`如下：
+```python
+Route::get('/', function()
+{
+    return View::make('index');
+});
+```
+不出意外，这时候访问`localhost:8000`会出现下图这样：
+![tool-editor](https://raw.githubusercontent.com/lipin/blog_laravel/master/public/i/Screen%20Shot%202015-01-23%20at%2010.47.28%20AM.png)
+终于见到了亲手编写的第一个页面，是不是有点小激动啊？
+## 8.创建登录视图
+
+在`nav.blade.php`中修改登录超链接的地址：
+```python
+<a href="{{ URL::to('login') }}" class="am-btn am-btn-primary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-user"></span> Login</a>
+```
+`URL::to('login')`会生成`http://localhost:8000/login`这个地址。
+
+创建`login.blade.php`：
+
+`$ php artisan generate:view login`
+修改`login.blade.php：`
+```python
+@extends('_layouts.default')
+
+@section('main')
+  <div class="am-g am-g-fixed">
+    <div class="am-u-lg-6 am-u-md-8">
+      <br/>
+      @if (Session::has('message'))
+        <div class="am-alert am-alert-danger" data-am-alert>
+          <p>{{ Session::get('message') }}</p>
+        </div>
+      @endif
+      @if ($errors->has())
+        <div class="am-alert am-alert-danger" data-am-alert>
+          <p>{{ $errors->first() }}</p>
+        </div>
+      @endif
+      {{ Form::open(array('url' => 'login', 'class' => 'am-form')) }}
+        {{ Form::label('email', 'E-mail:') }}
+        {{ Form::email('email', Input::old('email')) }}
+        <br/>
+        {{ Form::label('password', 'Password:') }}
+        {{ Form::password('password') }}
+        <br/>
+        <label for="remember_me">
+          <input id="remember_me" name="remember_me" type="checkbox" value="1">
+          Remember Me
+        </label>
+        <br/>
+        <div class="am-cf">
+          {{ Form::submit('Login', array('class' => 'am-btn am-btn-primary am-btn-sm am-fl')) }}
+        </div>
+      {{ Form::close() }}
+      <br/>
+    </div>
+  </div>
+@stop
+```
+在`routes.php`中增加：
+```python
+Route::get('login', function()
+{
+    return View::make('login');
+});
+```
+这时候访问`localhost:8000/login`或者点击导航条的Login按钮会出现下图这样：
+
+
+
+## 9.实现登录
+
+创建用户登录后主页：
+
+`$ php artisan generate:view home`
+修改`home.blade.php`：
+```python
+@extends('_layouts.default')
+
+@section('main')
+<div class="am-g am-g-fixed blog-g-fixed">
+  <div class="am-u-sm-12">
+      <h1>Hello {{{ Auth::user()->nickname }}}</h1>
+  </div>
+</div>
+@stop
+```
+上面的`{{{ }}}`可以对字符串做转义处理，一定程度上避免XSS攻击。
+
+修改`nav.blade.php`：
+```python
+<div class="am-collapse am-topbar-collapse" id="collapse-head">
+  @if (Auth::check())
+    <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right">
+      <li class="am-dropdown" data-am-dropdown>
+        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+          <span class="am-icon-users"></span> {{{ Auth::user()->nickname }}} <span class="am-icon-caret-down"></span>
+        </a>
+        <ul class="am-dropdown-content">
+          <li><a href="{{ URL::to('logout') }}"><span class="am-icon-power-off"></span> Exit</a></li>
+        </ul>
+      </li>
+    </ul>
+  @else
+    <div class="am-topbar-right">
+      <a href="{{ URL::to('login') }}" class="am-btn am-btn-primary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-user"></span> Login</a>
+    </div>
+  @endif
+</div>
+```
+在`Routes.php`中增加：
+```python
+Route::post('login', array('before' => 'csrf', function()
+{
+    $rules = array(
+        'email'       => 'required|email',
+        'password'    => 'required|min:6',
+        'remember_me' => 'boolean',
+    );
+    $validator = Validator::make(Input::all(), $rules);
+    if ($validator->passes())
+    {
+        if (Auth::attempt(array(
+            'email'    => Input::get('email'),
+            'password' => Input::get('password'),
+            'block'    => 0), (boolean) Input::get('remember_me')))
+        {
+            return Redirect::intended('home');
+        } else {
+            return Redirect::to('login')->withInput()->with('message', 'E-mail or password error');
+        }
+    } else {
+        return Redirect::to('login')->withInput()->withErrors($validator);
+    }
+}));
+
+Route::get('home', array('before' => 'auth', function()
+{
+    return View::make('home');
+}));
+```
+下面就可以尝试用户登录了，如果输入信息有误，会出现错误信息如：
+
+
+
+登录成功后会出现下图这样：
+
+
+
+这里我们使用了`Laravel`自带的身份验证`Auth`，你也可以使用更加强大的`Sentry`，`Web`表单验证用了`Validator`，`View`和`Redirect`详细可以查看视图和响应文档，还使用了路由过滤器，csrf过滤器可以使我们轻松地防御csrf攻击。
+
+## 10.退出登录
+
+在`routes.php`中增加：
+```python
+Route::get('logout', array('before' => 'auth', function()
+{
+    Auth::logout();
+    return Redirect::to('/');
+}));
+```
+现在你就可以实现退出功能了，点击Exit：
+
+
+
+退出后会跳转到主页。
+

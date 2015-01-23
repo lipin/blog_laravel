@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration {
 		    $table->string('nickname');
 		    $table->boolean('is_admin')->default(0);
 		    $table->boolean('block')->default(0);
+		    $table->rememberToken();
 		    $table->timestamps();
 		});
 	}
