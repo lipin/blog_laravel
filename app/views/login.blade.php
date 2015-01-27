@@ -5,8 +5,8 @@
     <div class="am-u-lg-6 am-u-md-8">
       <br/>
       @if (Session::has('message'))
-        <div class="am-alert am-alert-danger" data-am-alert>
-          <p>{{ Session::get('message') }}</p>
+        <div class="am-alert am-alert-{{ Session::get('message')['type'] }}" data-am-alert>
+          <p>{{ Session::get('message')['content'] }}</p>
         </div>
       @endif
       @if ($errors->has())
