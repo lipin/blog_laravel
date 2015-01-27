@@ -9,6 +9,8 @@
           <li><a href="{{ URL::to('logout') }}"><span class="am-icon-power-off"></span> Exit</a></li>
         </ul>
       </li>
+      <li><a href="{{ URL::to('user/'. Auth::id() . '/edit') }}"><span class="am-icon-user"></span> Information</a>
+      </li>
     </ul>
   @else
   <div class="am-topbar-right">
