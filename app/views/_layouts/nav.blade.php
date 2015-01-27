@@ -11,8 +11,11 @@
       </li>
     </ul>
   @else
-    <div class="am-topbar-right">
-      <a href="{{ URL::to('login') }}" class="am-btn am-btn-primary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-user"></span> Login</a>
-    </div>
-  @endif
+  <div class="am-topbar-right">
+    <a href="{{ URL::to('register') }}" class="am-btn am-btn-secondary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-pencil"></span> Register</a>
+  </div>
+  <div class="am-topbar-right">
+    <a href="{{ URL::to('login') }}" class="am-btn am-btn-primary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-user"></span> Login</a>
+  </div>
+@endif
 </div>

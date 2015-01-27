@@ -52,3 +52,7 @@ Route::get('logout', array('before' => 'auth', function()
     Auth::logout();
     return Redirect::to('/');
 }));
+Route::get('register', function()
+{
+    return View::make('users.create');
+});
