@@ -12,6 +12,8 @@
   <link rel="alternate icon" type="image/x-icon" href="{{ URL::asset('i/favicon.ico') }}"/>
   <link rel="stylesheet" href="//cdn.amazeui.org/amazeui/2.1.0/css/amazeui.min.css"/>
   {{ HTML::style('css/custom.css') }}
+  <script src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdn.amazeui.org/amazeui/2.1.0/js/amazeui.min.js"></script>
 </head>
 <body>
 <header class="am-topbar am-topbar-fixed-top">
@@ -26,8 +28,5 @@
 @yield('main')
 
 @include('_layouts.footer')
-
-<script src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
-<script src="//cdn.amazeui.org/amazeui/2.1.0/js/amazeui.min.js"></script>
 </body>
 </html>

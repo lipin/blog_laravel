@@ -50,7 +50,13 @@ Route::filter('auth.basic', function()
 {
 	return Auth::basic();
 });
-
+//过滤只有管理员才能管理用户
+Route::filter('isAdmin', function()
+{
+    if (!Auth::user()->is_admin) {
+        return Redirect::to('/');
+    }
+});
 /*
 |--------------------------------------------------------------------------
 | Guest Filter

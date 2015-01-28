@@ -122,3 +122,37 @@ Route::put('user/{id}', array('before' => 'auth|csrf', function($id)
         return Redirect::to('/');
     }
 }));
+//用户列表
+Route::group(array('prefix' => 'admin', 'before' => 'auth|isAdmin'), function()
+{
+    Route::get('users', function()
+    {
+        return View::make('admin.users.list')->with('users', User::all())->with('page', 'users');
+    });
+});
+
+Route::model('user', 'User');
+
+Route::group(array('before' => 'auth|csrf|isAdmin'), function()
+{
+    Route::put('user/{user}/reset', function(User $user)
+    {
+        $user->password = Hash::make('123456');
+        $user->save();
+        return Redirect::to('admin/users')->with('message', array('type' => 'success', 'content' => 'Reset password successfully'));
+    });
+
+    Route::delete('user/{user}', function(User $user)
+    {
+        $user->block = 1;
+        $user->save();
+        return Redirect::to('admin/users')->with('message', array('type' => 'success', 'content' => 'Lock user successfully'));
+    });
+
+    Route::put('user/{user}/unblock', function(User $user)
+    {
+        $user->block = 0;
+        $user->save();
+        return Redirect::to('admin/users')->with('message', array('type' => 'success', 'content' => 'Unlock user successfully'));
+    });
+});
