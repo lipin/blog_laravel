@@ -156,3 +156,7 @@ Route::group(array('before' => 'auth|csrf|isAdmin'), function()
         return Redirect::to('admin/users')->with('message', array('type' => 'success', 'content' => 'Unlock user successfully'));
     });
 });
+//文章资源路由
+Route::resource('article', 'ArticleController');
+//Markdown解析预览
+Route::post('article/preview', array('before' => 'auth', 'uses' => 'ArticleController@preview'));

@@ -13,4 +13,9 @@ class User extends Eloquent implements UserInterface
     protected $hidden = array('password', 'remember_token');
     protected $fillable = array('email','nickname','password');
  	protected $guarded = array('id', 'password');
+
+ 	public function articles()
+ 	{
+ 		return $this->hasMany('Article');
+ 	}
 }

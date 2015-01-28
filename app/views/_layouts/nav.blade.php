@@ -9,8 +9,12 @@
       <div class="am-dropdown" data-am-dropdown="{boundary: '.am-topbar'}">
         <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm am-dropdown-toggle" data-am-dropdown-toggle><span class="am-icon-users"></span> {{{ Auth::user()->nickname }}} <span class="am-icon-caret-down"></span></button>
         <ul class="am-dropdown-content">
-          <li><a href="{{ URL::to('user/'. Auth::id() . '/edit') }}"><span class="am-icon-user"></span> Information</a></li>
-          <li><a href="{{ URL::to('logout') }}"><span class="am-icon-power-off"></span> Exit</a></li>
+          <li><a href="{{ URL::to('article/create') }}"><span class="am-icon-edit"></span> Publish Article</a>
+          </li>
+          <li><a href="{{ URL::to('user/'. Auth::id() . '/edit') }}"><span class="am-icon-user"></span> Information</a>
+          </li>
+          <li><a href="{{ URL::to('logout') }}"><span class="am-icon-power-off"></span> Exit</a>
+          </li>
         </ul>
       </div>
     </div>
