@@ -13,7 +13,9 @@
 
 Route::get('/', function()
 {
-	return View::make('index');
+    $articles = Article::with('user', 'tags')->orderBy('created_at', 'desc')->paginate(1);
+    $tags = Tag::where('count', '>', '0')->orderBy('count', 'desc')->orderBy('updated_at', 'desc')->take(10)->get();
+    return View::make('index')->with('articles', $articles)->with('tags', $tags);
 });
 Route::get('login', function()
 {
@@ -45,7 +47,7 @@ Route::post('login', array('before' => 'csrf', function()
 
 Route::get('home', array('before' => 'auth', function()
 {
-    return View::make('home');
+    return View::make('home')->with('user', Auth::user())->with('articles', Article::with('tags')->where('user_id', '=', Auth::id())->orderBy('created_at', 'desc')->get());
 }));
 Route::get('logout', array('before' => 'auth', function()
 {
@@ -160,3 +162,5 @@ Route::group(array('before' => 'auth|csrf|isAdmin'), function()
 Route::resource('article', 'ArticleController');
 //Markdown解析预览
 Route::post('article/preview', array('before' => 'auth', 'uses' => 'ArticleController@preview'));
+Route::get('user/{user}/articles', 'UserController@articles');
+Route::post('article/{id}/preview', array('before' => 'auth', 'uses' => 'ArticleController@preview'));

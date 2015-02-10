@@ -7,7 +7,7 @@
         <br/>
         <div class="am-article-hd">
           <h1 class="am-article-title">{{{ $article->title }}}</h1>
-          <p class="am-article-meta">Author: <a style="cursor: pointer;">{{{ $article->user->nickname }}}</a> Datetime: {{ $article->updated_at }}</p>
+          <p class="am-article-meta">Author: <a href="{{ URL::to('user/' . $article->user->id . '/articles') }}" style="cursor: pointer;">{{{ $article->user->nickname }}}</a> Datetime: {{ $article->updated_at }}</p>
         </div>
         <div class="am-article-bd">
             <blockquote>

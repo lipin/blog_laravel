@@ -18,6 +18,9 @@
         </ul>
       </div>
     </div>
+    <div class="am-topbar-right">
+      <a href="{{ URL::to('user/'. Auth::id() . '/articles') }}" class="am-btn am-btn-primary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-list"></span> My Articles</a>
+    </div>
   @else
   <div class="am-topbar-right">
     <a href="{{ URL::to('register') }}" class="am-btn am-btn-secondary am-topbar-btn am-btn-sm topbar-link-btn"><span class="am-icon-pencil"></span> Register</a>
