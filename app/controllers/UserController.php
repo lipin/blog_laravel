@@ -1,10 +1,8 @@
 <?php
-
 class UserController extends \BaseController {
-
 	public function articles(User $user)
 	{
-	    return View::make('home')->with('user', $user)->with('articles', Article::with('tags')->where('user_id', '=', $user->id)->orderBy('created_at', 'desc')->get());
+		return View::make('home')->with('user', $user)->with('articles', Article::with('tags')->where('user_id', '=', $user->id)->orderBy('created_at', 'desc')->get());
 	}
 	/**
 	 * Display a listing of the resource.
@@ -16,7 +14,6 @@ class UserController extends \BaseController {
 	{
 		//
 	}
-
 	/**
 	 * Show the form for creating a new resource.
 	 * GET /user/create
@@ -27,7 +24,6 @@ class UserController extends \BaseController {
 	{
 		//
 	}
-
 	/**
 	 * Store a newly created resource in storage.
 	 * POST /user
@@ -38,7 +34,6 @@ class UserController extends \BaseController {
 	{
 		//
 	}
-
 	/**
 	 * Display the specified resource.
 	 * GET /user/{id}
@@ -50,7 +45,6 @@ class UserController extends \BaseController {
 	{
 		//
 	}
-
 	/**
 	 * Show the form for editing the specified resource.
 	 * GET /user/{id}/edit
@@ -62,7 +56,6 @@ class UserController extends \BaseController {
 	{
 		//
 	}
-
 	/**
 	 * Update the specified resource in storage.
 	 * PUT /user/{id}
@@ -74,7 +67,6 @@ class UserController extends \BaseController {
 	{
 		//
 	}
-
 	/**
 	 * Remove the specified resource from storage.
 	 * DELETE /user/{id}
@@ -86,5 +78,4 @@ class UserController extends \BaseController {
 	{
 		//
 	}
-
 }

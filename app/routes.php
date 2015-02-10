@@ -13,7 +13,7 @@
 
 Route::get('/', function()
 {
-    $articles = Article::with('user', 'tags')->orderBy('created_at', 'desc')->paginate(1);
+    $articles = Article::with('user', 'tags')->orderBy('created_at', 'desc')->paginate(10);
     $tags = Tag::where('count', '>', '0')->orderBy('count', 'desc')->orderBy('updated_at', 'desc')->take(10)->get();
     return View::make('index')->with('articles', $articles)->with('tags', $tags);
 });
@@ -38,13 +38,12 @@ Route::post('login', array('before' => 'csrf', function()
         {
             return Redirect::intended('home');
         } else {
-            return Redirect::to('login')->withInput()->with('message', array('type' => 'danger', 'content' => 'E-mail or password error'));
+            return Redirect::to('login')->withInput()->with('message', array('type' => 'danger', 'content' => 'E-mail or password error or be locked'));
         }
     } else {
         return Redirect::to('login')->withInput()->withErrors($validator);
     }
 }));
-
 Route::get('home', array('before' => 'auth', function()
 {
     return View::make('home')->with('user', Auth::user())->with('articles', Article::with('tags')->where('user_id', '=', Auth::id())->orderBy('created_at', 'desc')->get());
@@ -54,12 +53,10 @@ Route::get('logout', array('before' => 'auth', function()
     Auth::logout();
     return Redirect::to('/');
 }));
-//用户注册视图
 Route::get('register', function()
 {
     return View::make('users.create');
 });
-//实现用户注册
 Route::post('register', array('before' => 'csrf', function()
 {
     $rules = array(
@@ -82,7 +79,6 @@ Route::post('register', array('before' => 'csrf', function()
         return Redirect::to('register')->withInput()->withErrors($validator);
     }
 }));
-//用户编辑视图
 Route::get('user/{id}/edit', array('before' => 'auth', 'as' => 'user.edit', function($id)
 {
     if (Auth::user()->is_admin or Auth::id() == $id) {
@@ -91,7 +87,6 @@ Route::get('user/{id}/edit', array('before' => 'auth', 'as' => 'user.edit', func
         return Redirect::to('/');
     }
 }));
-//实现
 Route::put('user/{id}', array('before' => 'auth|csrf', function($id)
 {
     if (Auth::user()->is_admin or (Auth::id() == $id)) {
@@ -118,23 +113,22 @@ Route::put('user/{id}', array('before' => 'auth|csrf', function($id)
             $user->save();
             return Redirect::route('user.edit', $id)->with('user', $user)->with('message', array('type' => 'success', 'content' => 'Modify successfully'));
         } else {
-            return Redirect::route('user.edit', $id)->withInput()->with('user', $user)->withErrors($validator);    
+            return Redirect::route('user.edit', $id)->withInput()->with('user', $user)->withErrors($validator); 
         }
     } else {
         return Redirect::to('/');
     }
 }));
-//用户列表
 Route::group(array('prefix' => 'admin', 'before' => 'auth|isAdmin'), function()
 {
     Route::get('users', function()
     {
         return View::make('admin.users.list')->with('users', User::all())->with('page', 'users');
     });
+    Route::get('articles', 'AdminController@articles');
+    Route::get('tags', 'AdminController@tags');
 });
-
 Route::model('user', 'User');
-
 Route::group(array('before' => 'auth|csrf|isAdmin'), function()
 {
     Route::put('user/{user}/reset', function(User $user)
@@ -143,14 +137,12 @@ Route::group(array('before' => 'auth|csrf|isAdmin'), function()
         $user->save();
         return Redirect::to('admin/users')->with('message', array('type' => 'success', 'content' => 'Reset password successfully'));
     });
-
     Route::delete('user/{user}', function(User $user)
     {
         $user->block = 1;
         $user->save();
         return Redirect::to('admin/users')->with('message', array('type' => 'success', 'content' => 'Lock user successfully'));
     });
-
     Route::put('user/{user}/unblock', function(User $user)
     {
         $user->block = 0;
@@ -158,9 +150,9 @@ Route::group(array('before' => 'auth|csrf|isAdmin'), function()
         return Redirect::to('admin/users')->with('message', array('type' => 'success', 'content' => 'Unlock user successfully'));
     });
 });
-//文章资源路由
-Route::resource('article', 'ArticleController');
-//Markdown解析预览
 Route::post('article/preview', array('before' => 'auth', 'uses' => 'ArticleController@preview'));
+Route::resource('article', 'ArticleController');
 Route::get('user/{user}/articles', 'UserController@articles');
 Route::post('article/{id}/preview', array('before' => 'auth', 'uses' => 'ArticleController@preview'));
+Route::get('tag/{id}/articles', 'TagController@articles');
+Route::resource('tag', 'TagController');

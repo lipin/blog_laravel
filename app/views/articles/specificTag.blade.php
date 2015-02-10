@@ -2,7 +2,9 @@
 
 @section('main')
 <div class="am-g am-g-fixed">
-  <div class="am-u-md-8">
+  <div class="am-u-sm-12">
+    <br/>
+    <blockquote>Tag: <span class="am-badge am-badge-success am-radius">{{{ $tag->name }}}</span></blockquote>
     @foreach ($articles as $article)
     <article class="blog-main">
       <h3 class="am-article-title blog-title">
@@ -25,32 +27,6 @@
     </article>
     @endforeach
     {{ $articles->links() }}
-  </div>
-
-  <div class="am-u-md-4 blog-sidebar">
-    <br/>
-    <div class="am-panel-group">
-      <section class="am-panel am-panel-default">
-        <div class="am-panel-hd"><span class="am-icon-tags"></span> <a href="{{ URL::route('tag.index') }}">Tags</a></div>
-        <ul class="am-list">
-          @for ($i = 0, $len = count($tags); $i < $len; $i++)
-      <li>
-        <a href="{{ URL::to('tag/' . $tag->id . '/articles') }}">{{ $tags[$i]->name }} 
-      @if ($i == 0)
-        <span class="am-fr am-badge am-badge-danger am-round">{{ $tags[$i]->count }}</span>
-      @elseif ($i == 1)
-        <span class="am-fr am-badge am-badge-warning am-round">{{ $tags[$i]->count }}</span>
-      @elseif ($i == 2)
-        <span class="am-fr am-badge am-badge-success am-round">{{ $tags[$i]->count }}</span>
-      @else
-        <span class="am-fr am-badge am-round">{{ $tags[$i]->count }}</span>
-      @endif
-        </a>
-      </li>
-          @endfor          
-        </ul>
-      </section>
-    </div>
   </div>
 </div>
 @stop

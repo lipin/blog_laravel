@@ -8,9 +8,8 @@
     <tr>
       <th>Title</th>
       <th>Tags</th>
-      @if ($user->id == Auth::id() or (Auth::check() and Auth::user()->is_admin))
+      <th>Author</th>
       <th>Managment</th>
-      @endif
     </tr>
     </thead>
     <tbody>
@@ -22,14 +21,13 @@
         <span class="am-badge am-badge-success am-radius">{{ $tag->name }}</span>
       @endforeach
       </td>
-      @if ($user->id == Auth::id() or (Auth::check() and Auth::user()->is_admin))
+      <td><a href="{{ URL::to('user/' . $article->user->id . '/articles') }}">{{{ $article->user->nickname }}}</a></td>
       <td>
         <a href="{{ URL::to('article/'. $article->id . '/edit') }}" class="am-btn am-btn-xs am-btn-primary"><span class="am-icon-pencil"></span> Edit</a>
         {{ Form::open(array('url' => 'article/' . $article->id, 'method' => 'DELETE', 'style' => 'display: inline;')) }}
           <button type="button" class="am-btn am-btn-xs am-btn-danger" id="delete{{ $article->id }}"><span class="am-icon-remove"></span> Delete</button>
         {{ Form::close() }}
       </td>
-      @endif
     </tr>
     @endforeach
     </tbody>
